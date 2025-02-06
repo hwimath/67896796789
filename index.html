@@ -1,863 +1,812 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>휘매쓰 연산 챌린지!</title>
-    <!-- MathJax 라이브러리 로드 -->
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        #start-screen, #game-container, #game-over {
-            display: none;
-            padding: 50px;
-        }
-        #start-screen.active, #game-container.active, #game-over.active {
-            display: block;
-        }
-        h1 {
-            color: #343a40;
-            margin-bottom: 20px;
-        }
-        .difficulty-button {
-            display: inline-block;
-            margin: 10px;
-            padding: 15px 30px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .difficulty-button:hover {
-            background-color: #0056b3;
-        }
-        #energy-bar {
-            width: 80%;
-            height: 25px;
-            background-color: #dee2e6;
-            border-radius: 12.5px;
-            margin: 20px auto;
-            overflow: hidden;
-        }
-        #energy {
-            height: 100%;
-            background-color: #28a745;
-            width: 100%;
-            transition: width 0.1s linear;
-        }
-        #stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-            font-size: 18px;
-            color: #495057;
-        }
-        #question {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #343a40;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .option, .number-option {
-            display: inline-block;
-            margin: 10px;
-            padding: 15px 25px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #6c757d;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            min-width: 150px;
-        }
-        .option:hover, .number-option:hover {
-            background-color: #5a6268;
-        }
-        .option.correct, .number-option.correct {
-            background-color: #28a745 !important;
-        }
-        .option.wrong, .number-option.wrong {
-            background-color: #dc3545 !important;
-        }
-        #game-over {
-            color: #dc3545;
-        }
-        #game-over button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #game-over button:hover {
-            background-color: #0056b3;
-        }
-        /* Popup 스타일 */
-        #popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: none;
-            z-index: 1000;
-        }
-        #popup button {
-            margin-top: 20px;
-            padding: 8px 16px;
-            font-size: 14px;
-            color: #fff;
-            background-color: #ffc107;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #popup button:hover {
-            background-color: #e0a800;
-        }
-        /* 숫자 선택 스타일 */
-        #number-options {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .number-option.selected {
-            border: 2px solid #007bff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>정수와 유리수</title>
+  <!-- MathJax 라이브러리 로드 -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+  <style>
+      body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+          margin: 0;
+          padding: 0;
+          text-align: center;
+      }
+      #start-screen, #game-container, #game-over {
+          display: none;
+          padding: 50px;
+      }
+      #start-screen.active, #game-container.active, #game-over.active {
+          display: block;
+      }
+      h1 {
+          color: #343a40;
+          margin-bottom: 20px;
+      }
+      .difficulty-button {
+          display: inline-block;
+          margin: 10px;
+          padding: 15px 30px;
+          font-size: 18px;
+          color: #fff;
+          background-color: #007bff;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+      .difficulty-button:hover {
+          background-color: #0056b3;
+      }
+      #energy-bar {
+          width: 80%;
+          height: 25px;
+          background-color: #dee2e6;
+          border-radius: 12.5px;
+          margin: 20px auto;
+          overflow: hidden;
+      }
+      #energy {
+          height: 100%;
+          background-color: #28a745;
+          width: 100%;
+          transition: width 0.1s linear;
+      }
+      #stats {
+          display: flex;
+          justify-content: center;
+          gap: 30px;
+          margin-bottom: 20px;
+          font-size: 18px;
+          color: #495057;
+      }
+      #question {
+          font-size: 24px;
+          margin-bottom: 20px;
+          color: #343a40;
+          max-width: 800px;
+          margin-left: auto;
+          margin-right: auto;
+      }
+      .option, .number-option {
+          display: inline-block;
+          margin: 10px;
+          padding: 15px 25px;
+          font-size: 18px;
+          color: #fff;
+          background-color: #6c757d;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          min-width: 100px; /* OX만 있으므로 폭 조금 줄임 */
+      }
+      .option:hover, .number-option:hover {
+          background-color: #5a6268;
+      }
+      .option.correct, .number-option.correct {
+          background-color: #28a745 !important;
+      }
+      .option.wrong, .number-option.wrong {
+          background-color: #dc3545 !important;
+      }
+      #game-over {
+          color: #dc3545;
+      }
+      #game-over button {
+          margin-top: 20px;
+          padding: 10px 20px;
+          font-size: 16px;
+          color: #fff;
+          background-color: #007bff;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+      }
+      #game-over button:hover {
+          background-color: #0056b3;
+      }
+      /* Popup 스타일 */
+      #popup {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: #fff3cd;
+          border: 1px solid #ffeeba;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          display: none;
+          z-index: 1000;
+      }
+      #popup button {
+          margin-top: 20px;
+          padding: 8px 16px;
+          font-size: 14px;
+          color: #fff;
+          background-color: #ffc107;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+      #popup button:hover {
+          background-color: #e0a800;
+      }
+      /* 숫자 선택 스타일 */
+      #number-options {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          margin-bottom: 20px;
+      }
+      .number-option.selected {
+          border: 2px solid #007bff;
+      }
+      /* 이름 입력 필드 스타일 */
+      #player-name {
+          padding: 10px;
+          font-size: 18px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+      }
+      /* 전송 결과 출력 영역 */
+      #response {
+          margin-top: 20px;
+          white-space: pre-wrap;
+          text-align: left;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+          color: #343a40;
+      }
+  </style>
 </head>
 <body>
-    <!-- 시작 화면 -->
-    <div id="start-screen" class="active">
-        <h1>휘매쓰 연산 챌린지!</h1>
-        <p>난이도를 선택하세요:</p>
-        <button class="difficulty-button" onclick="startGame('최상')">최상 (20초 시작)</button>
-        <button class="difficulty-button" onclick="startGame('상')">상 (30초 시작)</button>
-        <button class="difficulty-button" onclick="startGame('중')">중 (40초 시작)</button>
-        <button class="difficulty-button" onclick="startGame('하')">하 (시간 제한 없음)</button>
-    </div>
+  <!-- 시작 화면 -->
+  <div id="start-screen" class="active">
+      <h1>정수와 유리수</h1>
+      <p>이름을 입력하세요:</p>
+      <input type="text" id="player-name" placeholder="이름">
+      <p>난이도를 선택하세요:</p>
+      <button class="difficulty-button" onclick="startGame('최상')">최상 (20초 시작)</button>
+      <button class="difficulty-button" onclick="startGame('상')">상 (30초 시작)</button>
+      <button class="difficulty-button" onclick="startGame('중')">중 (40초 시작)</button>
+      <button class="difficulty-button" onclick="startGame('하')">하 (시간 제한 없음)</button>
+  </div>
 
-    <!-- 게임 화면 -->
-    <div id="game-container">
-        <div id="stats">
-            <div id="score-display">점수: 0</div>
-            <div id="lives-display">남은 기회: 3</div>
-            <div id="time-display">전체 게임 시간: 0초</div>
-        </div>
-        <div id="energy-bar">
-            <div id="energy"></div>
-        </div>
-        <div id="question"></div>
-        <!-- 객관식 보기 -->
-        <div id="options">
-            <button class="option" onclick="checkAnswer(0)"></button>
-            <button class="option" onclick="checkAnswer(1)"></button>
-            <button class="option" onclick="checkAnswer(2)"></button>
-            <button class="option" onclick="checkAnswer(3)"></button>
-        </div>
-        <!-- 숫자 선택 보기 -->
-        <div id="number-options" style="display:none;"></div>
-        <button id="submit-button" style="display:none;" onclick="submitNumberAnswer()">제출하기</button>
-    </div>
+  <!-- 게임 화면 -->
+  <div id="game-container">
+      <div id="stats">
+          <div id="score-display">점수: 0</div>
+          <div id="lives-display">남은 기회: 3</div>
+          <div id="time-display">전체 게임 시간: 0초</div>
+      </div>
+      <div id="energy-bar">
+          <div id="energy"></div>
+      </div>
+      <div id="question"></div>
+      <!-- 객관식(OX) 보기 -->
+      <div id="options">
+          <button class="option" onclick="checkAnswer(0)"></button>
+          <button class="option" onclick="checkAnswer(1)"></button>
+      </div>
+      <!-- 숫자 선택 보기 -->
+      <div id="number-options" style="display:none;"></div>
+      <button id="submit-button" style="display:none;" onclick="submitNumberAnswer()">제출하기</button>
+  </div>
 
-    <!-- 게임 종료 화면 -->
-    <div id="game-over">
-        <h1>게임 종료!</h1>
-        <p id="final-score"></p>
-        <button onclick="restartGame()">다시 시작하기</button>
-    </div>
+  <!-- 게임 종료 화면 -->
+  <div id="game-over">
+      <h1>게임 종료!</h1>
+      <p id="final-score"></p>
+      <button onclick="sendScore()">점수 전송하기</button>
+      <div id="response"></div>
+      <button onclick="restartGame()">다시 시작하기</button>
+  </div>
 
-    <!-- 팝업 -->
-    <div id="popup">
-        <p id="popup-message"></p>
-        <button onclick="closePopup()">닫기</button>
-    </div>
+  <!-- 팝업 -->
+  <div id="popup">
+      <p id="popup-message"></p>
+      <button onclick="closePopup()">닫기</button>
+  </div>
 
-    <script>
-        // 게임 상태 변수들
-        let score = 0;
-        let lives = 3;
-        let totalGameTime = 0;
-        let difficulty = '';
-        let timePerQuestion = 0;
-        let pointsPerQuestion = 0;
-        let energyWidth = 100;
-        let energyInterval = null;
-        let totalTimeInterval = null;
-        let shuffledQuestions = [];
-        let currentQuestion = {};
-        let correctOptionIndex = -1; // 정답 옵션의 인덱스
-        let rewardGiven = false; // 보상 여부
-        let selectedNumbers = []; // 숫자 선택 문제에서 선택한 숫자들
+  <script>
+      // 게임 상태 변수들
+      let score = 0;
+      let lives = 3;
+      let totalGameTime = 0;
+      let difficulty = '';
+      let timePerQuestion = 0;
+      let pointsPerQuestion = 0;
+      let energyWidth = 100;
+      let energyInterval = null;
+      let totalTimeInterval = null;
+      let shuffledQuestions = [];
+      let currentQuestion = {};
+      let correctOptionIndex = -1; // 정답 옵션의 인덱스
+      let rewardGiven = false; // 보상 여부
+      let selectedNumbers = []; // 숫자 선택 문제에서 선택한 숫자들
+      let playerName = "";
 
-        // 문제들
-        const questions = [
-            // 객관식 문제들
-            {
-                type: "choice",
-                question: "자연수는 유리수이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "0은 유리수가 아니다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "\\( \\dfrac{7}{3} \\)은 양의 유리수이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "서로 다른 두 유리수 사이에는 무수히 많은 유리수가 존재한다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "정수는 유리수가 아니다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "0은 유리수이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "\\( -3 \\)은 분모와 분자가 정수인 분수로 나타낼 수 없다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "모든 정수는 유리수이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "유리수는 정수와 정수가 아닌 유리수로 이루어져 있다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "음의 부호 \\( - \\)는 생략할 수 있다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "정수가 아닌 유리수는 무수히 많다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "1과 3 사이에 있는 유리수는 1개뿐이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "유리수는 양의 유리수와 음의 유리수로 이루어져 있다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "두 유리수 사이에는 또 다른 유리수가 없다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "\\( +0.3 \\)은 유리수가 아니다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "\\( -\\dfrac{2}{5} \\)는 유리수이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "\\( +\\dfrac{16}{8} \\)은 정수가 아닌 유리수이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "모든 유리수는 분수 꼴로 나타낼 수 있다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "\\( -2 \\)와 \\( -1 \\) 사이에는 무수히 많은 유리수가 있다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "양수는 모든 음수보다 크다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "0은 양의 정수이면서 동시에 음의 정수이다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "가장 큰 음의 정수는 알 수 없다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            {
-                type: "choice",
-                question: "자연수는 모두 정수라고 할 수 있다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "○"
-            },
-            {
-                type: "choice",
-                question: "서로 다른 두 유리수 사이에는 항상 정수가 존재한다. (  )",
-                options: [
-                    "○",
-                    "×",
-                    "알 수 없다",
-                    "둘 다 아니다"
-                ],
-                answer: "×"
-            },
-            // 숫자 선택 문제들
-            {
-                type: "select",
-                question: `<strong><보기></strong><br>
-                +0.5, -\\( \\dfrac{3}{7} \\), +7, +2, -1.4, +10, -2, 0<br><br>
-                양수를 모두 고르시오.`,
-                numbers: ["+0.5", "-\\( \\dfrac{3}{7} \\)", "+7", "+2", "-1.4", "+10", "-2", "0"],
-                answer: ["+0.5", "+7", "+2", "+10"]
-            },
-            {
-                type: "select",
-                question: `<strong><보기></strong><br>
-                +0.5, -\\( \\dfrac{3}{7} \\), +7, +2, -1.4, +10, -2, 0<br><br>
-                음의 정수를 모두 고르시오.`,
-                numbers: ["+0.5", "-\\( \\dfrac{3}{7} \\)", "+7", "+2", "-1.4", "+10", "-2", "0"],
-                answer: ["-2"]
-            },
-            {
-                type: "select",
-                question: `<strong><보기></strong><br>
-                +0.5, -\\( \\dfrac{3}{7} \\), +7, +2, -1.4, +10, -2, 0<br><br>
-                정수를 모두 고르시오.`,
-                numbers: ["+0.5", "-\\( \\dfrac{3}{7} \\)", "+7", "+2", "-1.4", "+10", "-2", "0"],
-                answer: ["+7", "+2", "+10", "-2", "0"]
-            },
-            // 추가적인 숫자 선택 문제들
-            {
-                type: "select",
-                question: `<strong><보기></strong><br>
-                -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
-                정수를 모두 고르시오.`,
-                numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
-                answer: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-3"]
-            },
-            {
-                type: "select",
-                question: `<strong><보기></strong><br>
-                -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
-                정수가 아닌 유리수를 모두 고르시오.`,
-                numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
-                answer: ["-1.8", "+\\( \\dfrac{7}{9} \\)"]
-            },
-            {
-                type: "select",
-                question: `<strong><보기></strong><br>
-                -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
-                양의 유리수를 모두 고르시오.`,
-                numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
-                answer: ["6", "+\\( \\dfrac{7}{9} \\)"]
-            },
-            {
-                type: "select",
-                question: `<strong><보기></strong><br>
-                -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
-                음의 유리수를 모두 고르시오.`,
-                numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
-                answer: ["-\\( \\dfrac{15}{3} \\)", "-1.8", "-3"]
-            },
-            // 더 많은 문제를 추가할 수 있습니다.
-            // 필요한 만큼 문제를 추가하시면 됩니다.
-        ];
+      // 문제들
+      // OX형(이지선다) 문제는 options를 ["○", "×"]로만 구성하고, answer는 "○" 또는 "×"만 사용
+      const questions = [
+          // OX 문제들(기존 사지선다 → 이지선다 변경)
+          {
+              type: "choice",
+              question: "자연수는 유리수이다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "0은 유리수가 아니다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "\\( \\dfrac{7}{3} \\)은 양의 유리수이다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "서로 다른 두 유리수 사이에는 무수히 많은 유리수가 존재한다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "정수는 유리수가 아니다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "0은 유리수이다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "-3은 분모와 분자가 정수인 분수로 나타낼 수 없다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "모든 정수는 유리수이다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "유리수는 정수와 정수가 아닌 유리수로 이루어져 있다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "음의 부호 - 는 생략할 수 있다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "정수가 아닌 유리수는 무수히 많다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "1과 3 사이에 있는 유리수는 1개뿐이다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "유리수는 양의 유리수와 음의 유리수로 이루어져 있다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "두 유리수 사이에는 또 다른 유리수가 없다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "\\( +0.3 \\)은 유리수가 아니다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "\\( -\\dfrac{2}{5} \\)는 유리수이다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "\\( +\\dfrac{16}{8} \\)은 정수가 아닌 유리수이다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "모든 유리수는 분수 꼴로 나타낼 수 있다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "-2와 -1 사이에는 무수히 많은 유리수가 있다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "양수는 모든 음수보다 크다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "0은 양의 정수이면서 동시에 음의 정수이다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "가장 큰 음의 정수는 알 수 없다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          {
+              type: "choice",
+              question: "자연수는 모두 정수라고 할 수 있다. (  )",
+              options: ["○", "×"],
+              answer: "○"
+          },
+          {
+              type: "choice",
+              question: "서로 다른 두 유리수 사이에는 항상 정수가 존재한다. (  )",
+              options: ["○", "×"],
+              answer: "×"
+          },
+          // 숫자 선택 문제들 (기존 그대로 유지)
+          {
+              type: "select",
+              question: `<strong><보기></strong><br>
+              +0.5, -\\( \\dfrac{3}{7} \\), +7, +2, -1.4, +10, -2, 0<br><br>
+              양수를 모두 고르시오.`,
+              numbers: ["+0.5", "-\\( \\dfrac{3}{7} \\)", "+7", "+2", "-1.4", "+10", "-2", "0"],
+              answer: ["+0.5", "+7", "+2", "+10"]
+          },
+          {
+              type: "select",
+              question: `<strong><보기></strong><br>
+              +0.5, -\\( \\dfrac{3}{7} \\), +7, +2, -1.4, +10, -2, 0<br><br>
+              음의 정수를 모두 고르시오.`,
+              numbers: ["+0.5", "-\\( \\dfrac{3}{7} \\)", "+7", "+2", "-1.4", "+10", "-2", "0"],
+              answer: ["-2"]
+          },
+          {
+              type: "select",
+              question: `<strong><보기></strong><br>
+              +0.5, -\\( \\dfrac{3}{7} \\), +7, +2, -1.4, +10, -2, 0<br><br>
+              정수를 모두 고르시오.`,
+              numbers: ["+0.5", "-\\( \\dfrac{3}{7} \\)", "+7", "+2", "-1.4", "+10", "-2", "0"],
+              answer: ["+7", "+2", "+10", "-2", "0"]
+          },
+          {
+              type: "select",
+              question: `<strong><보기></strong><br>
+              -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
+              정수를 모두 고르시오.`,
+              numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
+              answer: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-3"]
+          },
+          {
+              type: "select",
+              question: `<strong><보기></strong><br>
+              -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
+              정수가 아닌 유리수를 모두 고르시오.`,
+              numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
+              answer: ["-1.8", "+\\( \\dfrac{7}{9} \\)"]
+          },
+          {
+              type: "select",
+              question: `<strong><보기></strong><br>
+              -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
+              양의 유리수를 모두 고르시오.`,
+              numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
+              answer: ["6", "+\\( \\dfrac{7}{9} \\)"]
+          },
+          {
+              type: "select",
+              question: `<strong><보기></strong><br>
+              -\\( \\dfrac{15}{3} \\), 0, 6, -1.8, -3, +\\( \\dfrac{7}{9} \\)<br><br>
+              음의 유리수를 모두 고르시오.`,
+              numbers: ["-\\( \\dfrac{15}{3} \\)", "0", "6", "-1.8", "-3", "+\\( \\dfrac{7}{9} \\)"],
+              answer: ["-\\( \\dfrac{15}{3} \\)", "-1.8", "-3"]
+          }
+      ];
 
-        // 보상 확률 설정
-        const rewards = [
-            { chance: 1/10000, message: "축하합니다! 5000원 상품권을 받으셨습니다!" },
-            { chance: 1/1000, message: "축하합니다! 3000원 상품권을 받으셨습니다!" },
-            { chance: 1/500, message: "축하합니다! 1회 면제권을 받으셨습니다!" }
-        ];
+      // 보상 확률 설정
+      const rewards = [
+          { chance: 1/10000, message: "축하합니다! 5000원 상품권을 받으셨습니다!" },
+          { chance: 1/1000, message: "축하합니다! 3000원 상품권을 받으셨습니다!" },
+          { chance: 1/500, message: "축하합니다! 1회 면제권을 받으셨습니다!" }
+      ];
 
-        // 게임 시작 함수
-        function startGame(selectedDifficulty) {
-            difficulty = selectedDifficulty;
-            document.getElementById('start-screen').classList.remove('active');
-            document.getElementById('game-container').classList.add('active');
+      // 게임 시작 함수
+      function startGame(selectedDifficulty) {
+          playerName = document.getElementById('player-name').value.trim();
+          if (!playerName) {
+              alert("이름을 입력하세요!");
+              return;
+          }
+          difficulty = selectedDifficulty;
+          document.getElementById('start-screen').classList.remove('active');
+          document.getElementById('game-container').classList.add('active');
 
-            // 난이도별 설정
-            switch(difficulty) {
-                case '최상':
-                    timePerQuestion = 20;
-                    pointsPerQuestion = 20;
-                    break;
-                case '상':
-                    timePerQuestion = 30;
-                    pointsPerQuestion = 15;
-                    break;
-                case '중':
-                    timePerQuestion = 40;
-                    pointsPerQuestion = 13;
-                    break;
-                case '하':
-                    timePerQuestion = 0; // 시간 제한 없음
-                    pointsPerQuestion = 10;
-                    break;
-            }
+          // 난이도별 설정
+          switch(difficulty) {
+              case '최상':
+                  timePerQuestion = 20;
+                  pointsPerQuestion = 20;
+                  break;
+              case '상':
+                  timePerQuestion = 30;
+                  pointsPerQuestion = 15;
+                  break;
+              case '중':
+                  timePerQuestion = 40;
+                  pointsPerQuestion = 13;
+                  break;
+              case '하':
+                  timePerQuestion = 0; // 시간 제한 없음
+                  pointsPerQuestion = 10;
+                  break;
+          }
 
-            if(difficulty !== '하') {
-                document.getElementById('energy-bar').style.display = 'block';
-                energyWidth = 100;
-                updateEnergyBar();
-                startEnergyBar();
-            } else {
-                document.getElementById('energy-bar').style.display = 'none';
-            }
+          if(difficulty !== '하') {
+              document.getElementById('energy-bar').style.display = 'block';
+              energyWidth = 100;
+              updateEnergyBar();
+              startEnergyBar();
+          } else {
+              document.getElementById('energy-bar').style.display = 'none';
+          }
 
-            // 게임 타이머 시작
-            startGameTimer();
+          // 게임 타이머 시작
+          startGameTimer();
 
-            // 질문 섞기
-            shuffledQuestions = shuffleArray([...questions]);
+          // 문제 섞기
+          shuffledQuestions = shuffleArray([...questions]);
 
-            // 초기 점수와 생명 설정
-            score = 0;
-            lives = 3;
-            totalGameTime = 0;
-            updateStats();
+          // 초기 점수와 생명 설정
+          score = 0;
+          lives = 3;
+          totalGameTime = 0;
+          rewardGiven = false;
+          updateStats();
 
-            // 첫 질문 로드
-            loadNextQuestion();
-        }
+          // 첫 질문 로드
+          loadNextQuestion();
+      }
 
-        // 게임 타이머
-        function startGameTimer() {
-            totalTimeInterval = setInterval(function() {
-                totalGameTime += 1;
-                document.getElementById('time-display').innerText = '전체 게임 시간: ' + totalGameTime + '초';
-            }, 1000);
-        }
+      // 게임 타이머
+      function startGameTimer() {
+          totalTimeInterval = setInterval(function() {
+              totalGameTime += 1;
+              document.getElementById('time-display').innerText = '전체 게임 시간: ' + totalGameTime + '초';
+          }, 1000);
+      }
 
-        // 에너지 바 시작
-        function startEnergyBar() {
-            clearInterval(energyInterval);
-            energyInterval = setInterval(function() {
-                if(timePerQuestion > 0) {
-                    energyWidth -= (100 / (timePerQuestion * 10)); // 0.1초마다 감소
-                    if(energyWidth <= 0) {
-                        energyWidth = 0;
-                        lives -= 1;
-                        if(lives <= 0) {
-                            showCorrectAnswer();
-                            endGame();
-                        } else {
-                            document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
-                            showCorrectAnswer();
-                            setTimeout(loadNextQuestion, 1000);
-                        }
-                    }
-                    updateEnergyBar();
-                }
-            }, 100);
-        }
+      // 에너지 바 시작
+      function startEnergyBar() {
+          clearInterval(energyInterval);
+          energyInterval = setInterval(function() {
+              if(timePerQuestion > 0) {
+                  energyWidth -= (100 / (timePerQuestion * 10)); // 0.1초마다 감소
+                  if(energyWidth <= 0) {
+                      energyWidth = 0;
+                      lives -= 1;
+                      if(lives <= 0) {
+                          showCorrectAnswer();
+                          endGame();
+                      } else {
+                          document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
+                          showCorrectAnswer();
+                          setTimeout(loadNextQuestion, 1000);
+                      }
+                  }
+                  updateEnergyBar();
+              }
+          }, 100);
+      }
 
-        // 에너지 바 업데이트
-        function updateEnergyBar() {
-            document.getElementById('energy').style.width = energyWidth + '%';
-            if(energyWidth > 60) {
-                document.getElementById('energy').style.backgroundColor = '#28a745';
-            } else if(energyWidth > 30) {
-                document.getElementById('energy').style.backgroundColor = '#ffc107';
-            } else {
-                document.getElementById('energy').style.backgroundColor = '#dc3545';
-            }
-        }
+      // 에너지 바 업데이트
+      function updateEnergyBar() {
+          document.getElementById('energy').style.width = energyWidth + '%';
+          if(energyWidth > 60) {
+              document.getElementById('energy').style.backgroundColor = '#28a745';
+          } else if(energyWidth > 30) {
+              document.getElementById('energy').style.backgroundColor = '#ffc107';
+          } else {
+              document.getElementById('energy').style.backgroundColor = '#dc3545';
+          }
+      }
 
-        // 질문 로드 함수
-        function loadNextQuestion() {
-            if(shuffledQuestions.length === 0) {
-                // 모든 질문을 다 풀었으면 다시 섞기
-                shuffledQuestions = shuffleArray([...questions]);
-            }
+      // 질문 로드 함수
+      function loadNextQuestion() {
+          if(shuffledQuestions.length === 0) {
+              // 모든 질문을 다 풀었으면 다시 섞기
+              shuffledQuestions = shuffleArray([...questions]);
+          }
 
-            currentQuestionIndex = Math.floor(Math.random() * shuffledQuestions.length);
-            currentQuestion = shuffledQuestions[currentQuestionIndex];
-            shuffledQuestions.splice(currentQuestionIndex,1); // 중복 방지
+          let currentQuestionIndex = Math.floor(Math.random() * shuffledQuestions.length);
+          currentQuestion = shuffledQuestions[currentQuestionIndex];
+          shuffledQuestions.splice(currentQuestionIndex, 1); // 중복 방지
 
-            // 질문 표시
-            document.getElementById('question').innerHTML = currentQuestion.question;
+          // 질문 표시
+          document.getElementById('question').innerHTML = currentQuestion.question;
 
-            // 객관식 보기 초기화
-            document.getElementById('options').style.display = 'none';
-            document.getElementById('number-options').style.display = 'none';
-            document.getElementById('submit-button').style.display = 'none';
+          // 객관식(OX) 보기 초기화
+          document.getElementById('options').style.display = 'none';
+          document.getElementById('number-options').style.display = 'none';
+          document.getElementById('submit-button').style.display = 'none';
 
-            if(currentQuestion.type === "choice") {
-                // 객관식 보기 설정
-                document.getElementById('options').style.display = 'block';
-                let options = currentQuestion.options.slice(); // 깊은 복사
+          // 문제 유형 판단
+          if(currentQuestion.type === "choice") {
+              // OX 보기 설정
+              document.getElementById('options').style.display = 'block';
 
-                // 옵션 섞기
-                options = shuffleArray(options);
+              // "○", "×" 두 가지이므로 섞어도 2개만 존재
+              let options = currentQuestion.options.slice(); 
+              options = shuffleArray(options);
 
-                // 섞인 옵션에서 정답의 인덱스 찾기
-                correctOptionIndex = options.indexOf(currentQuestion.answer);
+              // 섞인 옵션에서 정답의 인덱스 찾기
+              correctOptionIndex = options.indexOf(currentQuestion.answer);
 
-                let optionButtons = document.getElementsByClassName('option');
-                for(let i=0; i < optionButtons.length; i++) {
-                    optionButtons[i].innerHTML = options[i];
-                    optionButtons[i].classList.remove('correct', 'wrong');
-                    optionButtons[i].disabled = false;
-                }
-            } else if(currentQuestion.type === "select") {
-                // 숫자 선택 보기 설정
-                document.getElementById('number-options').style.display = 'flex';
-                document.getElementById('submit-button').style.display = 'inline-block';
-                selectedNumbers = [];
-                let numberOptionsDiv = document.getElementById('number-options');
-                numberOptionsDiv.innerHTML = '';
+              let optionButtons = document.getElementsByClassName('option');
+              for(let i = 0; i < optionButtons.length; i++) {
+                  optionButtons[i].innerHTML = options[i];
+                  optionButtons[i].classList.remove('correct', 'wrong');
+                  optionButtons[i].disabled = false;
+              }
+          } 
+          else if(currentQuestion.type === "select") {
+              // 숫자 선택 문제 설정
+              document.getElementById('number-options').style.display = 'flex';
+              document.getElementById('submit-button').style.display = 'inline-block';
+              selectedNumbers = [];
+              let numberOptionsDiv = document.getElementById('number-options');
+              numberOptionsDiv.innerHTML = '';
 
-                currentQuestion.numbers.forEach((num, index) => {
-                    let numButton = document.createElement('button');
-                    numButton.classList.add('number-option');
-                    numButton.setAttribute('data-value', num);
-                    numButton.innerHTML = num;
-                    numButton.onclick = function() {
-                        if(selectedNumbers.includes(num)) {
-                            selectedNumbers = selectedNumbers.filter(n => n !== num);
-                            numButton.classList.remove('selected');
-                        } else {
-                            selectedNumbers.push(num);
-                            numButton.classList.add('selected');
-                        }
-                    };
-                    numberOptionsDiv.appendChild(numButton);
-                });
-            }
+              currentQuestion.numbers.forEach((num) => {
+                  let numButton = document.createElement('button');
+                  numButton.classList.add('number-option');
+                  numButton.setAttribute('data-value', num);
+                  numButton.innerHTML = num;
+                  numButton.onclick = function() {
+                      if(selectedNumbers.includes(num)) {
+                          selectedNumbers = selectedNumbers.filter(n => n !== num);
+                          numButton.classList.remove('selected');
+                      } else {
+                          selectedNumbers.push(num);
+                          numButton.classList.add('selected');
+                      }
+                  };
+                  numberOptionsDiv.appendChild(numButton);
+              });
+          }
 
-            // 에너지 바 리셋
-            if(difficulty !== '하') {
-                energyWidth = 100;
-                updateEnergyBar();
-                clearInterval(energyInterval);
-                startEnergyBar();
-            }
+          // 에너지 바 리셋
+          if(difficulty !== '하') {
+              energyWidth = 100;
+              updateEnergyBar();
+              clearInterval(energyInterval);
+              startEnergyBar();
+          }
 
-            // MathJax 렌더링
-            MathJax.typesetPromise();
-        }
+          // MathJax 렌더링
+          MathJax.typesetPromise();
+      }
 
-        // 정답 확인 함수
-        function checkAnswer(selectedIndex) {
-            let optionButtons = document.getElementsByClassName('option');
+      // 정답 확인 함수 (OX)
+      function checkAnswer(selectedIndex) {
+          let optionButtons = document.getElementsByClassName('option');
 
-            if(selectedIndex === correctOptionIndex) {
-                // 정답
-                score += pointsPerQuestion;
-                document.getElementById('score-display').innerText = '점수: ' + score;
-                optionButtons[selectedIndex].classList.add('correct');
-                // 보상 확인
-                checkReward();
-                // 다음 질문 로드
-                setTimeout(loadNextQuestion, 1000);
-            } else {
-                // 오답
-                optionButtons[selectedIndex].classList.add('wrong');
-                showCorrectAnswer();
-                lives -= 1;
-                if(lives <= 0) {
-                    endGame();
-                } else {
-                    document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
-                    setTimeout(loadNextQuestion, 1000);
-                }
-            }
+          if(selectedIndex === correctOptionIndex) {
+              // 정답
+              score += pointsPerQuestion;
+              document.getElementById('score-display').innerText = '점수: ' + score;
+              optionButtons[selectedIndex].classList.add('correct');
+              // 보상 확인
+              checkReward();
+              // 다음 질문 로드
+              setTimeout(loadNextQuestion, 1000);
+          } else {
+              // 오답
+              optionButtons[selectedIndex].classList.add('wrong');
+              showCorrectAnswer();
+              lives -= 1;
+              if(lives <= 0) {
+                  endGame();
+              } else {
+                  document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
+                  setTimeout(loadNextQuestion, 1000);
+              }
+          }
 
-            // 버튼 비활성화
-            for(let btn of optionButtons) {
-                btn.disabled = true;
-            }
+          // 버튼 비활성화
+          for(let btn of optionButtons) {
+              btn.disabled = true;
+          }
 
-            updateStats();
-        }
+          updateStats();
+      }
 
-        // 숫자 선택 문제 제출 함수
-        function submitNumberAnswer() {
-            let correctAnswers = currentQuestion.answer.sort();
-            let userAnswers = selectedNumbers.sort();
+      // 숫자 선택 문제 제출 함수
+      function submitNumberAnswer() {
+          let correctAnswers = currentQuestion.answer.slice().sort();
+          let userAnswers = selectedNumbers.slice().sort();
 
-            let numberButtons = document.getElementsByClassName('number-option');
+          let numberButtons = document.getElementsByClassName('number-option');
 
-            let isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(userAnswers);
+          let isCorrect = JSON.stringify(correctAnswers) === JSON.stringify(userAnswers);
 
-            if(isCorrect) {
-                // 정답
-                score += pointsPerQuestion;
-                document.getElementById('score-display').innerText = '점수: ' + score;
-                for(let btn of numberButtons) {
-                    if(currentQuestion.answer.includes(btn.getAttribute('data-value'))) {
-                        btn.classList.add('correct');
-                    }
-                    btn.disabled = true;
-                }
-                // 보상 확인
-                checkReward();
-                // 다음 질문 로드
-                setTimeout(loadNextQuestion, 2000);
-            } else {
-                // 오답
-                for(let btn of numberButtons) {
-                    if(currentQuestion.answer.includes(btn.getAttribute('data-value'))) {
-                        btn.classList.add('correct');
-                    } else if(selectedNumbers.includes(btn.getAttribute('data-value'))) {
-                        btn.classList.add('wrong');
-                    }
-                    btn.disabled = true;
-                }
-                lives -= 1;
-                if(lives <= 0) {
-                    endGame();
-                } else {
-                    document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
-                    setTimeout(loadNextQuestion, 2000);
-                }
-            }
+          if(isCorrect) {
+              // 정답
+              score += pointsPerQuestion;
+              document.getElementById('score-display').innerText = '점수: ' + score;
+              for(let btn of numberButtons) {
+                  if(currentQuestion.answer.includes(btn.getAttribute('data-value'))) {
+                      btn.classList.add('correct');
+                  }
+                  btn.disabled = true;
+              }
+              // 보상 확인
+              checkReward();
+              // 다음 질문 로드
+              setTimeout(loadNextQuestion, 2000);
+          } else {
+              // 오답
+              for(let btn of numberButtons) {
+                  if(currentQuestion.answer.includes(btn.getAttribute('data-value'))) {
+                      btn.classList.add('correct');
+                  } else if(selectedNumbers.includes(btn.getAttribute('data-value'))) {
+                      btn.classList.add('wrong');
+                  }
+                  btn.disabled = true;
+              }
+              lives -= 1;
+              if(lives <= 0) {
+                  endGame();
+              } else {
+                  document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
+                  setTimeout(loadNextQuestion, 2000);
+              }
+          }
 
-            updateStats();
-        }
+          updateStats();
+      }
 
-        // 정답 표시 함수
-        function showCorrectAnswer() {
-            if(currentQuestion.type === "choice") {
-                let optionButtons = document.getElementsByClassName('option');
-                optionButtons[correctOptionIndex].classList.add('correct');
-            }
-        }
+      // 정답 표시 함수
+      function showCorrectAnswer() {
+          if(currentQuestion.type === "choice") {
+              let optionButtons = document.getElementsByClassName('option');
+              optionButtons[correctOptionIndex].classList.add('correct');
+          }
+      }
 
-        // 게임 종료 함수
-        function endGame() {
-            clearInterval(energyInterval);
-            clearInterval(totalTimeInterval);
-            document.getElementById('game-container').classList.remove('active');
-            document.getElementById('game-over').classList.add('active');
-            document.getElementById('final-score').innerText = '최종 점수: ' + score;
-        }
+      // 게임 종료 함수
+      function endGame() {
+          clearInterval(energyInterval);
+          clearInterval(totalTimeInterval);
+          document.getElementById('game-container').classList.remove('active');
+          document.getElementById('game-over').classList.add('active');
+          document.getElementById('final-score').innerText = '최종 점수: ' + score;
+      }
 
-        // 게임 재시작 함수
-        function restartGame() {
-            document.getElementById('game-over').classList.remove('active');
-            document.getElementById('start-screen').classList.add('active');
-        }
+      // 게임 재시작 함수
+      function restartGame() {
+          document.getElementById('game-over').classList.remove('active');
+          document.getElementById('start-screen').classList.add('active');
+      }
 
-        // 통계 업데이트 함수
-        function updateStats() {
-            document.getElementById('score-display').innerText = '점수: ' + score;
-            document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
-            document.getElementById('time-display').innerText = '전체 게임 시간: ' + totalGameTime + '초';
-        }
+      // 통계 업데이트 함수
+      function updateStats() {
+          document.getElementById('score-display').innerText = '점수: ' + score;
+          document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
+          document.getElementById('time-display').innerText = '전체 게임 시간: ' + totalGameTime + '초';
+      }
 
-        // 배열 섞기 함수
-        function shuffleArray(array) {
-            for(let i = array.length - 1; i > 0; i--){
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
+      // 배열 섞기 함수
+      function shuffleArray(array) {
+          for(let i = array.length - 1; i > 0; i--){
+              const j = Math.floor(Math.random() * (i + 1));
+              [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+      }
 
-        // 보상 확인 함수
-        function checkReward() {
-            if(rewardGiven) return; // 이미 보상을 받았다면 종료
-            let rand = Math.random();
-            let cumulative = 0;
-            for(let reward of rewards) {
-                cumulative += reward.chance;
-                if(rand < cumulative) {
-                    showPopup(reward.message);
-                    rewardGiven = true;
-                    break;
-                }
-            }
-        }
+      // 보상 확인 함수
+      function checkReward() {
+          if(rewardGiven) return; // 이미 보상을 받았다면 종료
+          let rand = Math.random();
+          let cumulative = 0;
+          for(let reward of rewards) {
+              cumulative += reward.chance;
+              if(rand < cumulative) {
+                  showPopup(reward.message);
+                  rewardGiven = true;
+                  break;
+              }
+          }
+      }
 
-        // 팝업 표시 함수
-        function showPopup(message) {
-            document.getElementById('popup-message').innerText = message;
-            document.getElementById('popup').style.display = 'block';
-        }
+      // 팝업 표시 함수
+      function showPopup(message) {
+          document.getElementById('popup-message').innerText = message;
+          document.getElementById('popup').style.display = 'block';
+      }
 
-        // 팝업 닫기 함수
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-        }
-    </script>
+      // 팝업 닫기 함수
+      function closePopup() {
+          document.getElementById('popup').style.display = 'none';
+      }
+
+      // 점수 전송 함수
+      async function sendScore() {
+          // 최종 점수와 전체 게임 시간을 서버에 전송합니다.
+          await saveData("정수와 유리수", playerName, score, totalGameTime);
+      }
+
+      // 데이터 전송 함수 (async/await 사용)
+      async function saveData(game, name, score, elapsedTime) {
+          const FUNCTION_URL = "https://us-central1-record-f420d.cloudfunctions.net/report";
+
+          const requestData = {
+              game,
+              name,
+              score: parseInt(score, 10),
+              elapsedTime: parseInt(elapsedTime, 10)
+          };
+
+          try {
+              const response = await fetch(FUNCTION_URL, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(requestData)
+              });
+
+              const responseData = await response.json();
+
+              if (response.ok) {
+                  document.getElementById('response').innerText =
+                      `성공: ${JSON.stringify(responseData, null, 2)}`;
+              } else {
+                  document.getElementById('response').innerText =
+                      `오류: ${JSON.stringify(responseData, null, 2)}`;
+              }
+          } catch (error) {
+              console.error('요청 실패:', error);
+              document.getElementById('response').innerText =
+                  `네트워크 오류: ${error.message}`;
+          }
+      }
+  </script>
 </body>
 </html>
