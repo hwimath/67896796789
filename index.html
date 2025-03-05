@@ -91,6 +91,21 @@
       .option.wrong, .number-option.wrong {
           background-color: #dc3545 !important;
       }
+      #next-question-button {
+          margin-top: 20px;
+          padding: 10px 20px;
+          font-size: 18px;
+          color: #fff;
+          background-color: #007bff;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          display: none;
+      }
+      #next-question-button:hover {
+          background-color: #0056b3;
+      }
       #game-over {
           color: #dc3545;
       }
@@ -197,6 +212,8 @@
       <!-- 숫자 선택 보기 -->
       <div id="number-options" style="display:none;"></div>
       <button id="submit-button" style="display:none;" onclick="submitNumberAnswer()">제출하기</button>
+      <!-- 다음 문제 버튼 -->
+      <button id="next-question-button" onclick="nextQuestion()">다음문제</button>
   </div>
 
   <!-- 게임 종료 화면 -->
@@ -232,10 +249,8 @@
       let selectedNumbers = []; // 숫자 선택 문제에서 선택한 숫자들
       let playerName = "";
 
-      // 문제들
-      // OX형(이지선다) 문제는 options를 ["○", "×"]로만 구성하고, answer는 "○" 또는 "×"만 사용
+      // 문제들 (문제 내용은 검토 결과 올바르므로 그대로 유지)
       const questions = [
-          // OX 문제들(기존 사지선다 → 이지선다 변경)
           {
               type: "choice",
               question: "자연수는 유리수이다. (  )",
@@ -380,7 +395,6 @@
               options: ["○", "×"],
               answer: "×"
           },
-          // 숫자 선택 문제들 (기존 그대로 유지)
           {
               type: "select",
               question: `<strong><보기></strong><br>
@@ -526,7 +540,7 @@
                       } else {
                           document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
                           showCorrectAnswer();
-                          setTimeout(loadNextQuestion, 1000);
+                          showNextButton();
                       }
                   }
                   updateEnergyBar();
@@ -548,6 +562,9 @@
 
       // 질문 로드 함수
       function loadNextQuestion() {
+          // 다음 문제 버튼 숨기기
+          document.getElementById('next-question-button').style.display = 'none';
+
           if(shuffledQuestions.length === 0) {
               // 모든 질문을 다 풀었으면 다시 섞기
               shuffledQuestions = shuffleArray([...questions]);
@@ -631,10 +648,8 @@
               score += pointsPerQuestion;
               document.getElementById('score-display').innerText = '점수: ' + score;
               optionButtons[selectedIndex].classList.add('correct');
-              // 보상 확인
               checkReward();
-              // 다음 질문 로드
-              setTimeout(loadNextQuestion, 1000);
+              showNextButton();
           } else {
               // 오답
               optionButtons[selectedIndex].classList.add('wrong');
@@ -642,9 +657,10 @@
               lives -= 1;
               if(lives <= 0) {
                   endGame();
+                  return;
               } else {
                   document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
-                  setTimeout(loadNextQuestion, 1000);
+                  showNextButton();
               }
           }
 
@@ -675,10 +691,8 @@
                   }
                   btn.disabled = true;
               }
-              // 보상 확인
               checkReward();
-              // 다음 질문 로드
-              setTimeout(loadNextQuestion, 2000);
+              showNextButton();
           } else {
               // 오답
               for(let btn of numberButtons) {
@@ -692,9 +706,10 @@
               lives -= 1;
               if(lives <= 0) {
                   endGame();
+                  return;
               } else {
                   document.getElementById('lives-display').innerText = '남은 기회: ' + lives;
-                  setTimeout(loadNextQuestion, 2000);
+                  showNextButton();
               }
           }
 
@@ -707,6 +722,17 @@
               let optionButtons = document.getElementsByClassName('option');
               optionButtons[correctOptionIndex].classList.add('correct');
           }
+      }
+
+      // 다음 문제 버튼 표시 함수
+      function showNextButton() {
+          document.getElementById('next-question-button').style.display = 'inline-block';
+      }
+
+      // 다음 문제 버튼 클릭 시 호출되는 함수
+      function nextQuestion() {
+          document.getElementById('next-question-button').style.display = 'none';
+          loadNextQuestion();
       }
 
       // 게임 종료 함수
